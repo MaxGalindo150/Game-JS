@@ -4,7 +4,12 @@ const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
-const spanLives = document.querySelector('.lives')
+const spanLives = document.querySelector('.lives');
+const spanTime = document.querySelector('.time');
+const spanRecord = document.querySelector('.record');
+const pResult = document.querySelector('.result');
+const finalMessage = document.querySelector('#game-completed'); 
+const gameOverMessage = document.querySelector('#game-over');
 
 
 let canvasSize;
@@ -12,6 +17,9 @@ let elementsSize;
 let level = 0;
 let lives = 3;
 
+let timeStart;
+let timePlayer;
+let timeInterval;
 
 
 const playerPosition = {
@@ -32,9 +40,9 @@ window.addEventListener('resize', setCanvasSize)
 function setCanvasSize() {
 
     if (window.innerWidth > window.innerHeight) {
-        canvasSize = window.innerWidth*0.8;
+        canvasSize = window.innerWidth*0.36;
     } else  {
-        canvasSize = window.innerHeight*0.8;
+        canvasSize = window.innerHeight*0.36;
     }
 
     canvas.setAttribute('width', canvasSize);
@@ -42,11 +50,16 @@ function setCanvasSize() {
 
     elementsSize = canvasSize / 10;
 
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+
     startGame();
 }
 
 function startGame() {
     //console.log({ canvasSize, elementsSize });
+    countLives();
+    showRecord();
   
     game.font = elementsSize + 'px Verdana';
     game.textAlign = 'end';
@@ -56,6 +69,12 @@ function startGame() {
     if (!map){
       gameWin();
       return;
+    }
+
+    if (!timeStart) {
+      timeStart = Date.now();
+      timeInterval = setInterval(countTime,100);
+      showRecord
     }
 
     const mapRows = map.trim().split('\n');
@@ -123,18 +142,55 @@ function levelWin() {
 
 function gameWin() {
   console.log('You won!!!')
+  clearInterval(timeInterval);
+
+  const recordTime = localStorage.getItem('record_time');
+  const playerTime = Date.now() - timeStart;
+
+
+  if (recordTime) {
+    if (recordTime >= playerTime) {
+      localStorage.setItem('record_time', playerTime);
+      pResult.innerHTML = 'YOU BEAT THE RECORD! :)';
+    } else {
+      pResult.innerHTML = 'I\'m sorry, but you didnt surpass the record this time :( <br> Don\'t give up!';
+    }
+  } else {
+    localStorage.setItem('record_time', playerTime);
+    pResult.innerHTML = 'Great job on your first attempt! Now, challenge yourself and try to surpass your previous time. You can do it!';
+  }
+  showFinalMessage();
 }
 
 function lostLevel() {
-  lives -= 1;
+  lives--;
+
   console.log(lives)
   if (lives<=0) {
-    level = 0;
-    lives = 3;
+    gameOverMessage.classList.remove('inactive');
+    //level = 0;
+    //lives = 3;
+    //timeStart = undefined;
   }
   playerPosition.x = undefined;
   playerPosition.y = undefined;
   startGame();
+}
+
+function countLives() {
+    spanLives.innerHTML = emojis['HEART'].repeat(lives);
+}
+
+function countTime() {
+  spanTime.innerHTML = Date.now() - timeStart;
+}
+
+function showRecord() {
+  spanRecord.innerHTML = localStorage.getItem('record_time');
+}
+
+function showFinalMessage() {
+  finalMessage.classList.remove('inactive')
 }
 
 window.addEventListener('keydown', moveByKeys)
@@ -154,7 +210,7 @@ function moveByKeys(event) {
 function moveUp() {
     console.log('Up');
   
-    if ((playerPosition.y - elementsSize) < elementsSize) {
+    if ((playerPosition.y.toFixed(5) - elementsSize) < elementsSize) {
       console.log('OUT');
     } else {
       playerPosition.y -= elementsSize;
@@ -173,7 +229,7 @@ function moveUp() {
   function moveRight() {
     console.log('Right');
   
-    if ((playerPosition.x + elementsSize) > canvasSize) {
+    if ((playerPosition.x.toFixed(5) + elementsSize) > canvasSize) {
       console.log('OUT');
     } else {
       playerPosition.x += elementsSize;
@@ -183,7 +239,7 @@ function moveUp() {
   function moveDown() {
     console.log('Down');
     
-    if ((playerPosition.y + elementsSize) > canvasSize) {
+    if ((playerPosition.y.toFixed(5) + elementsSize) > canvasSize) {
       console.log('OUT');
     } else {
       playerPosition.y += elementsSize;

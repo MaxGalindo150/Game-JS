@@ -7,7 +7,7 @@
     <title>Skull</title>
 </head>
 <body>
-    <div class="game-container">
+    <div class="game-container inactive">
         <canvas id="game"></canvas>
         <div class="buttons">
             <button id="up">Up</button>
@@ -18,7 +18,35 @@
 
         <div class="messages">
             <p>Lives: <span class="lives"></span></p>
+            <p>Time ⏱️: <span class="time"></span></p>
+            <p>Record: <span class="record"></span></p>
         </div>
+    </div>
+
+    <div id="game-completed" class="inactive">
+        
+        <h1>Great Job!!! 🎉 🥳</h1>
+
+        <span>🏆</span>
+
+        <p class="result">kajgdbkdiw dabdiu i</p>
+        <a href="/index.html">
+            <input type="button" value="Try Again">
+        </a>
+        
+    </div>
+
+    <div id="game-over" class="inactive">
+        
+        <h1>Game Over 🤦🏽‍♂️</h1>
+
+        <span>👎</span>
+
+        <p>Don't Give Up!</p>
+        <a href="/index.html">
+            <input type="button" value="Try Again">
+        </a>
+        
     </div>
     
     <script src="maps.js"></script>
