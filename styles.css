@@ -93,19 +93,17 @@ p {
   margin-bottom: 50px;
 }
 
-#game-completed a {
+#game-completed input {
   display: inline-block;
   background-color: #ff6600;
   color: #fff;
   padding: 10px 20px;
   margin-top: 150px;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
-#game-completed a:hover {
-  background-color: #555;
-}
+
 
 #game-completed a input {
   background: none;
@@ -142,25 +140,16 @@ p {
   margin-bottom: 50px;
 }
 
-#game-over a {
+
+#game-over input {
   display: inline-block;
   background-color: #ff6600;
   color: #fff;
+  font-size: 20px;
   margin-top: 230px;
   padding: 10px 20px;
   text-decoration: none;
-  border-radius: 4px;
-}
-
-#game-over a:hover {
-  background-color: #555;
-}
-
-#game-over a input {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 20px;
+  border-radius: 5px;
 }
 
 

@@ -10,6 +10,8 @@ const spanRecord = document.querySelector('.record');
 const pResult = document.querySelector('.result');
 const finalMessage = document.querySelector('#game-completed'); 
 const gameOverMessage = document.querySelector('#game-over');
+const btnPlayAgain = document.querySelector('.play-again');
+const btnTryAgain = document.querySelector('.try-again');
 
 
 let canvasSize;
@@ -57,7 +59,7 @@ function setCanvasSize() {
 }
 
 function startGame() {
-    //console.log({ canvasSize, elementsSize });
+    console.log('current level: ', level);
     countLives();
     showRecord();
   
@@ -67,6 +69,10 @@ function startGame() {
     const map = maps[level];
     
     if (!map){
+      //level = 0;
+      //lives = 3;
+      //timeStart = undefined;
+      //setCanvasSize();
       gameWin();
       return;
     }
@@ -74,7 +80,7 @@ function startGame() {
     if (!timeStart) {
       timeStart = Date.now();
       timeInterval = setInterval(countTime,100);
-      showRecord
+      showRecord();
     }
 
     const mapRows = map.trim().split('\n');
@@ -118,7 +124,7 @@ function movePlayer() {
     const giftCollision = giftCollisionX && giftCollisionY;
 
     if (giftCollision) {
-        levelWin();
+      levelWin();
     }
 
     const enemyCollision = enemyPositions.find( enemy => {
@@ -136,7 +142,7 @@ function movePlayer() {
 
 function levelWin() {
   console.log('Next level')
-  level += 1
+  level++;
   startGame();
 }
 
@@ -167,10 +173,11 @@ function lostLevel() {
 
   console.log(lives)
   if (lives<=0) {
+    clearInterval(timeInterval);
     gameOverMessage.classList.remove('inactive');
-    //level = 0;
-    //lives = 3;
-    //timeStart = undefined;
+    level = 0;
+    lives = 3;
+    timeStart = undefined;
   }
   playerPosition.x = undefined;
   playerPosition.y = undefined;
@@ -190,7 +197,25 @@ function showRecord() {
 }
 
 function showFinalMessage() {
-  finalMessage.classList.remove('inactive')
+  finalMessage.classList.remove('inactive');
+}
+
+btnPlayAgain.addEventListener('click', keepPlaying);
+btnTryAgain.addEventListener('click', keepPlaying);
+
+function keepPlaying() {
+  if (!gameOverMessage.classList.contains('inactive')) {
+    gameOverMessage.classList.add('inactive');
+  } else if (!finalMessage.classList.contains('inactive')) {
+    finalMessage.classList.add('inactive');
+    level = 0;
+    lives = 3;
+    timeStart = undefined;
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    startGame();
+  }
 }
 
 window.addEventListener('keydown', moveByKeys)
@@ -198,6 +223,7 @@ btnUp.addEventListener('click', moveUp);
 btnLeft.addEventListener('click', moveLeft);
 btnRight.addEventListener('click', moveRight);
 btnDown.addEventListener('click', moveDown);
+
 
 function moveByKeys(event) {
     if (event.key == 'ArrowUp') moveUp();
@@ -217,32 +243,33 @@ function moveUp() {
       startGame();
     }
   }
-  function moveLeft() {
-    console.log('Left');
-    if ((playerPosition.x.toFixed(5) - elementsSize.toFixed(5)) < elementsSize) {
-      console.log('OUT');
-    } else {
-      playerPosition.x -= elementsSize;
-      startGame();
-    }
+
+function moveLeft() {
+  console.log('Left');
+  if ((playerPosition.x.toFixed(5) - elementsSize.toFixed(5)) < elementsSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.x -= elementsSize;
+    startGame();
   }
-  function moveRight() {
-    console.log('Right');
+}
+function moveRight() {
+  console.log('Right');
   
-    if ((playerPosition.x.toFixed(5) + elementsSize) > canvasSize) {
-      console.log('OUT');
-    } else {
-      playerPosition.x += elementsSize;
-      startGame();
-    }
+  if ((playerPosition.x.toFixed(5) + elementsSize) > canvasSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.x += elementsSize;
+    startGame();
   }
-  function moveDown() {
-    console.log('Down');
+}
+function moveDown() {
+  console.log('Down');
     
-    if ((playerPosition.y.toFixed(5) + elementsSize) > canvasSize) {
-      console.log('OUT');
-    } else {
-      playerPosition.y += elementsSize;
-      startGame();
-    }
+  if ((playerPosition.y.toFixed(5) + elementsSize) > canvasSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.y += elementsSize;
+    startGame();
   }
+}
