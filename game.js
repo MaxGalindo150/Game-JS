@@ -4,14 +4,13 @@ const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
-
+const spanLives = document.querySelector('.lives')
 
 
 let canvasSize;
 let elementsSize;
 let level = 0;
-let initialPlayerPosX;
-let initialPlayerPosY;
+let lives = 3;
 
 
 
@@ -73,8 +72,6 @@ function startGame() {
         const posY = elementsSize * (rowI + 1);
 
         if (col == 'O') {
-            initialPlayerPosX = posX;
-            initialPlayerPosY= posY;
             if (!playerPosition.x && !playerPosition.y){
                 playerPosition.x = posX;
                 playerPosition.y = posY;
@@ -129,8 +126,15 @@ function gameWin() {
 }
 
 function lostLevel() {
-  playerPosition.x = initialPlayerPosX;
-  playerPosition.y = initialPlayerPosY;
+  lives -= 1;
+  console.log(lives)
+  if (lives<=0) {
+    level = 0;
+    lives = 3;
+  }
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
+  startGame();
 }
 
 window.addEventListener('keydown', moveByKeys)
