@@ -46,6 +46,7 @@ button {
   margin: 0;
   padding: 5px 20px;
   width: 100px;
+  touch-action: manipulation;
 }
 button:not(:last-child) {
   margin-right: 10px;
